@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
 import classes from './QuizCreator.module.css'
-import Button from "../../components/UI/Button/Button";
-import {createControl, validate, validateForm} from "../../form/formFramewor";
-import Input from "../../components/UI/Input/Input";
-import Auxiliary from "../../hoc/Auxiliary/Auxiliary";
-import Select from "../../components/UI/Select/Select";
+import Button from '../../components/UI/Button/Button'
+import {createControl, validate, validateForm} from '../../form/formFramewor'
+import Input from '../../components/UI/Input/Input'
+import Auxiliary from '../../hoc/Auxiliary/Auxiliary'
+import Select from '../../components/UI/Select/Select'
+import axios from 'axios'
 
 function createOptionControl(number) {
     return createControl({
@@ -70,10 +71,29 @@ export default class QuizCreator extends Component {
         })
     }
 
-    createQuizHandler = event => {
+    createQuizHandler = async (event) => {
         event.preventDefault()
 
-        console.log(this.state.quiz)
+        try {
+            await axios.post('https://react-quiz-54682.firebaseio.com/quizes.json', this.state.quiz)
+
+            this.setState({
+                quiz: [],
+                isFormValid: false,
+                rightAnswerId: 1,
+                formControls: createFormControls()
+            })
+        } catch (e) {
+            console.log(e)
+        }
+
+        /*axios.post('https://react-quiz-54682.firebaseio.com/quizes.json', this.state.quiz)
+          .then(response => {
+              console.log(response)
+            })
+          .catch(error => console.log(error))*/
+
+
     }
 
     changeHandler = (value, controlName) => {
